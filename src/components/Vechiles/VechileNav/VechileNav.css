@@ -1,0 +1,21 @@
+body {
+  background-color: #141b2d;
+  width: 100vw;
+}
+
+nav {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  background-color: #1f2a40;
+}
+
+.logoImg {
+  height: 7rem;
+}
+.opertorName {
+  margin: 2.5rem 1.5rem;
+  color: #e0e0e0;
+  font-weight: 500;
+  font-size: large;
+}

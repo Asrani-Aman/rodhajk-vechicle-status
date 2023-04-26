@@ -1,0 +1,72 @@
+.vechile-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.filtering {
+  color: #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  /* width: 100%; */
+}
+.filtering > h4 {
+  text-align: center;
+  font-size: 2rem;
+  margin-top: 0.5rem;
+}
+.searchBars {
+  display: flex;
+  margin: auto;
+}
+
+.vechile-page {
+  width: 72vw;
+}
+.vechiles {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: space-between;
+}
+.vechile-card {
+  display: flex;
+  height: fit-content;
+  margin: 0.5rem;
+  flex-direction: column;
+  width: 20rem;
+  border: 2px solid #a1a4ab;
+  border-radius: 1rem;
+  overflow: hidden;
+  padding: 1rem;
+}
+.vechile-card {
+  text-align: center;
+}
+.vechile-location {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.vechile-card > button {
+  border: none;
+  outline: none;
+  padding: 0.7rem;
+  border-radius: 1rem;
+  color: #151632;
+  cursor: pointer;
+}
+.addBtn {
+  border: none;
+  outline: none;
+  /* padding: 0rem 0.7rem; */
+  /* padding: 0rem 0.7rem; */
+  border-radius: 0.5rem;
+  max-height: 2.5rem;
+  background: transparent;
+  cursor: pointer;
+}
+.vechile-header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
