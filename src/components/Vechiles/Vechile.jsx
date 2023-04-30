@@ -7,16 +7,20 @@
 //   const [to, setTo] = useState("");
 //   const [vechiles, setVechiles] = useState({});
 
-//   useEffect(() => {
-//     fetch("https://rodhak11.onrender.com/himraahi/trips")
+//   const getTrips = async () => {
+//     await fetch("https://rodhak11.onrender.com/himraahi/trips")
 //       .then((response) => {
 //         console.log(response.json);
-//         response.json();
+//         return response.json();
 //       })
 //       .then((users) => {
-//         console.log(users);
+//         console.log(users.data);
 //         setVechiles(users);
 //       });
+//   };
+
+//   useEffect(() => {
+//     getTrips();
 //   }, []);
 //   console.log(vechiles);
 //   return (
@@ -42,6 +46,7 @@
 // };
 
 // export default Vechile;
+
 import VechileNav from "./VechileNav/VechileNav";
 import "./Vechile.css";
 import SearchBox from "../search-box/search-box";
@@ -132,9 +137,8 @@ class Vechile extends Component {
               placeholderr="To"
             />
           </div>
-          ;
         </div>
-        <div className="card-list">
+        <div className="card-list vechiles">
           {finalFilterVechicles.map((vechiclee) => {
             const id = vechiclee._id;
             const Start = vechiclee.Start;
@@ -146,7 +150,7 @@ class Vechile extends Component {
                     src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2071&q=80"
                     alt="vechileImg"
                   ></img>
-                  {/* <h1>{Driver}</h1> */}
+
                   <div
                     className="vechile-location"
                     style={
@@ -164,8 +168,11 @@ class Vechile extends Component {
                   </div>
                   {/* <h3>Driver = {Driver}</h3> */}
                   <button style={{ backgroundColor: "#4cceac" }}>
-                    {" "}
-                    Show Status Here
+                    <a
+                      href={`https://rodhak11.onrender.com/himraahi/trip/${id}`}
+                    >
+                      Show Status Here
+                    </a>
                   </button>
                 </div>
               </div>
