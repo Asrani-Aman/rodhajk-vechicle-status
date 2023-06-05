@@ -10,7 +10,7 @@ const VechileNav = () => {
           <img className="logoImg" src={Logo} alt="logImg"></img>
         </div>
         <div className="opertorName">
-          <p>HRTC</p>
+          <p>HIMRAAHI</p>
         </div>
       </nav>
     </div>
