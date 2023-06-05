@@ -24,18 +24,19 @@ const Hero = () => {
           <h1>SEARCH FOR BUSES</h1>
           <h2 className="py-4">HERE !!</h2>
           <form
-            className="flex justify-between items-center max-w-[700px] mx-auto w-full border p-1
+            className="flex justify-between items-center max-w-[300px] mx-auto w-full border p-1
           rounded-md text-black bg-gray-100/90"
             onSubmit={(e) => e.preventDefault()}
           >
             <div>
+              <p> CLick Here to Search</p>
               {/* <input
               className="bg-transparent w-[300px] sm:w-[400px] font-[Poppins] focus:outline-none
                   "
               type="text"
               placeholder="Search Destinations"
             /> */}
-              <select
+              {/* <select
                 id="cars"
                 name="cars"
                 className="bg-transparent w-[300px] sm:w-[400px] font-[Poppins] focus:outline-none"
@@ -47,7 +48,7 @@ const Hero = () => {
                 <option value="audi">TRAVEL COMPANY Name</option>
                 <option value="audi">TRAVEL COMPANY Name</option>
                 <option value="audi">TRAVEL COMPANY Name</option>
-              </select>
+              </select> */}
             </div>
             <div>
               <button
@@ -59,7 +60,7 @@ const Hero = () => {
                 <AiOutlineSearch
                   size={20}
                   className="icon"
-                  style={{ color: "#ffffff" }}
+                  style={{ color: "#ffffff", width: "100%" }}
                 />
               </button>
             </div>
