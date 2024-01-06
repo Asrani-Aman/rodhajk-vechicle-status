@@ -35,7 +35,7 @@ const Navbar = () => {
             onClick={(e) => {
               e.preventDefault();
 
-              handleClick("https://rodhka-main.onrender.com");
+              handleClick("https://dndrodhak.in/");
             }}
           ></img>
         </h1>
