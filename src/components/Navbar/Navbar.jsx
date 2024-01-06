@@ -40,45 +40,7 @@ const Navbar = () => {
           ></img>
         </h1>
       </div>
-      <ul className="hidden md:flex">
-        <li
-          onClick={(e) => {
-            e.preventDefault();
-
-            handleClick("https://rodhka-main.onrender.com");
-          }}
-        >
-          Home
-        </li>
-        <li
-          onClick={(e) => {
-            e.preventDefault();
-
-            handleClick("https://rodhka-main.onrender.com");
-          }}
-        >
-          About
-        </li>
-        <li
-          onClick={(e) => {
-            e.preventDefault();
-
-            handleClick("https://rodhka-main.onrender.com");
-          }}
-        >
-          Testimonials
-        </li>
-        <li
-          onClick={(e) => {
-            e.preventDefault();
-
-            handleClick("https://rodhka-main.onrender.com");
-          }}
-        >
-          Contact us
-        </li>
-        {/* <li>Book</li> */}
-      </ul>
+     
       <div className="hidden md:flex">
         <BiSearch className="" size={20} />
         <BsPerson size={20} />
@@ -102,25 +64,7 @@ const Navbar = () => {
             : "absolute left-[-100%]"
         }
       >
-        <ul>
-          <h1>RODHAK</h1>
-          <li className="border-b">Home</li>
-          <li className="border-b">About</li>
-          <li className="border-b">Testimonials</li>
-          <li className="border-b">Contact us</li>
-          {/* <li className="border-b">Book</li> */}
-          <div className="flex flex-col">
-            {/* <button className="my-6">Search</button>
-            <button>Account</button> */}
-          </div>
-          <div className="flex justify-between my-6">
-            <FaFacebook className="icon" />
-            <FaTwitter className="icon" />
-            <FaYoutube className="icon" />
-            <FaPinterest className="icon" />
-            <FaInstagram className="icon" />
-          </div>
-        </ul>
+        
       </div>
     </div>
   );
