@@ -65,7 +65,7 @@ class Vechile extends Component {
   }
   componentDidMount() {
     console.log("componentDidMount request");
-    fetch("https://rodhak11.onrender.com/himraahi/trips")
+    fetch("http://89.116.33.224:3000/himraahi/trips")
       .then((response) => {
         console.log(response);
         console.log(response.json);
@@ -169,7 +169,7 @@ class Vechile extends Component {
                   {/* <h3>Driver = {Driver}</h3> */}
                   <button style={{ backgroundColor: "#4cceac" }}>
                     <a
-                      href={`http://195.35.45.35:3000/himraahi/trip/${id}`}
+                      href={`http://89.116.33.224:3000/himraahi/trip/${id}`}
                     >
                       Show Status Here
                     </a>
