@@ -65,7 +65,7 @@ class Vechile extends Component {
   }
   componentDidMount() {
     console.log("componentDidMount request");
-    fetch("http://89.116.33.224:3000/himraahi/trips")
+    fetch("https://rodhak-111.onrender.com/himraahi/trips")
       .then((response) => {
         console.log(response);
         console.log(response.json);
