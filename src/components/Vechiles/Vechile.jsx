@@ -1,84 +1,29 @@
-// import React, { useEffect, useState } from "react";
-// import VechileNav from "./VechileNav/VechileNav";
-// import "./Vechile.css";
-// import SearchBox from "../search-box/search-box";
-// const Vechile = () => {
-//   const [from, setFrom] = useState("");
-//   const [to, setTo] = useState("");
-//   const [vechiles, setVechiles] = useState({});
-
-//   const getTrips = async () => {
-//     await fetch("https://rodhak11.onrender.com/himraahi/trips")
-//       .then((response) => {
-//         console.log(response.json);
-//         return response.json();
-//       })
-//       .then((users) => {
-//         console.log(users.data);
-//         setVechiles(users);
-//       });
-//   };
-
-//   useEffect(() => {
-//     getTrips();
-//   }, []);
-//   console.log(vechiles);
-//   return (
-//     <div className="vechile-section">
-//       <VechileNav />
-//       <div className="filtering">
-//         <h4>Search Buses</h4>
-//         <div className="searchBars">
-//           <SearchBox
-//             // onChangeHandler={this.props.onSearchChange}
-//             className="student-search-box mt-4 rounded-3xl "
-//             placeholderr="From"
-//           />
-//           <SearchBox
-//             // onChangeHandler={this.props.onSearchChange}
-//             className="student-search-box mt-4 rounded-3xl "
-//             placeholderr="To"
-//           />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Vechile;
-
+import React, { Component } from "react";
+import { DNA } from "react-loader-spinner";
 import VechileNav from "./VechileNav/VechileNav";
 import "./Vechile.css";
 import SearchBox from "../search-box/search-box";
-import React, { Component } from "react";
 
 class Vechile extends Component {
   constructor() {
     super();
-    console.log("construtor request");
 
     this.state = {
       vechicles: [],
       from: "",
       to: "",
+      loading: true, // Add loading state
     };
   }
+
   componentDidMount() {
-    console.log("componentDidMount request");
     fetch("https://www.himraahi.in/himraahi/trips")
-      .then((response) => {
-        console.log(response);
-        console.log(response.json);
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((users) => {
-        // whenever set state i called rneder function is re called
         this.setState(
-          () => {
-            console.log(users.data);
-            return {
-              vechicles: users.data,
-            };
+          {
+            vechicles: users.data,
+            loading: false, // Set loading to false once data is fetched
           },
           () => {
             console.log(this.state);
@@ -86,35 +31,46 @@ class Vechile extends Component {
         );
       });
   }
+
   onSearchChange = (event) => {
-    // event.preventDefault();
     const from = event.target.value.toLowerCase();
-    // console.log(event.target.value);
     this.setState(() => {
       return { from };
     });
   };
+
   onSearchChange2 = (event) => {
-    // event.preventDefault();
     const to = event.target.value.toLowerCase();
-    // console.log(event.target.value);
     this.setState(() => {
       return { to };
     });
   };
 
   render() {
-    console.log("render");
-    const { vechicles, from, to } = this.state;
-    const { onSearchChange, onSearchChange2 } = this;
+    const { vechicles, from, to, loading } = this.state;
+
+    if (loading) {
+      return (
+        <div className="loader-container">
+          <DNA
+            visible={true}
+            height="512"
+            width="512"
+            ariaLabel="dna-loading"
+            wrapperStyle={{}}
+            wrapperClass="dna-wrapper"
+          />
+        </div>
+      );
+    }
+
     const filteredfrom = vechicles.filter((vechile) =>
       vechile.Start.toLowerCase().includes(from)
     );
-    console.log(filteredfrom);
+
     const filteredto = vechicles.filter((vechile) =>
       vechile.End.toLowerCase().includes(to)
     );
-    console.log(filteredto);
 
     const finalFilterVechicles = filteredfrom.filter((value) =>
       filteredto.includes(value)
@@ -127,12 +83,12 @@ class Vechile extends Component {
           <h4>Search Buses</h4>
           <div className="searchBars">
             <SearchBox
-              onChangeHandler={onSearchChange}
+              onChangeHandler={this.onSearchChange}
               className="student-search-box mt-4 rounded-3xl "
               placeholderr="From"
             />
             <SearchBox
-              onChangeHandler={onSearchChange2}
+              onChangeHandler={this.onSearchChange2}
               className="student-search-box mt-4 rounded-3xl "
               placeholderr="To"
             />
@@ -153,24 +109,20 @@ class Vechile extends Component {
 
                   <div
                     className="vechile-location"
-                    style={
-                      ({ Color: "#4cceac" },
-                      { display: "flex" },
-                      { justifyContent: "space-between" },
-                      { flexDirection: "row" },
-                      {
-                        width: "100%",
-                      })
-                    }
+                    style={{
+                      color: "#4cceac",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      flexDirection: "row",
+                      width: "100%",
+                    }}
                   >
-                    <p>From: {Start}</p>
-                    <p>To: {End}</p>
+                    <p>From: {Start} </p>
+
+                    <p> To: {End}</p>
                   </div>
-                  {/* <h3>Driver = {Driver}</h3> */}
                   <button style={{ backgroundColor: "#4cceac" }}>
-                    <a
-                      href={`http://89.116.33.224:3000/himraahi/trip/${id}`}
-                    >
+                    <a href={`http://89.116.33.224:3000/himraahi/trip/${id}`}>
                       Show Status Here
                     </a>
                   </button>
@@ -178,10 +130,6 @@ class Vechile extends Component {
               </div>
             );
           })}
-          {/* Add a condition to check if there are no vehicles matching the filters */}
-          {finalFilterVechicles.length === 0 && (
-            <div className="no-results">No vehicles found.</div>
-          )}
         </div>
       </div>
     );

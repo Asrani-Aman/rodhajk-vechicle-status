@@ -1,6 +1,5 @@
 import React from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-// import beachVid from '../assets/beachVid.mp4';
 import bgvdo from "../assets/pexels-athena-3010433-1920x1080-24fps.mp4";
 import Navbar from "./Navbar/Navbar";
 import Footer from "./Footer";
@@ -24,50 +23,23 @@ const Hero = () => {
           <h1>SEARCH FOR BUSES</h1>
           <h2 className="py-4">HERE !!</h2>
           <form
-            className="flex justify-between items-center max-w-[300px] mx-auto w-full border p-1
-          rounded-md text-black bg-gray-100/90"
+            className="flex-col justify-center items-center max-w-[300px] mx-auto w-full border p-1 rounded-md text-black bg-gray-100/90"
             onSubmit={(e) => e.preventDefault()}
           >
-            <div>
-              <p> CLick Here to Search</p>
-              {/* <input
-              className="bg-transparent w-[300px] sm:w-[400px] font-[Poppins] focus:outline-none
-                  "
-              type="text"
-              placeholder="Search Destinations"
-            /> */}
-              {/* <select
-                id="cars"
-                name="cars"
-                className="bg-transparent w-[300px] sm:w-[400px] font-[Poppins] focus:outline-none"
-              >
-                <option value="volvo">HRTC</option>
-                <option value="saab">TRAVEL COMPANY Name</option>
-                <option value="fiat">TRAVEL COMPANY Name</option>
-                <option value="audi">TRAVEL COMPANY Name</option>
-                <option value="audi">TRAVEL COMPANY Name</option>
-                <option value="audi">TRAVEL COMPANY Name</option>
-                <option value="audi">TRAVEL COMPANY Name</option>
-              </select> */}
-            </div>
             <div>
               <button
                 onClick={(e) => {
                   e.preventDefault();
                   navigate("/vehicles");
                 }}
+                className="bg-blue-500 text-white py-2 px-12 rounded-full"
               >
-                <AiOutlineSearch
-                  size={20}
-                  className="icon"
-                  style={{ color: "#ffffff", width: "100%" }}
-                />
+                START
               </button>
             </div>
           </form>
         </div>
       </div>
-      {/* <Footer /> */}
     </>
   );
 };

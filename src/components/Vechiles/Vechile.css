@@ -71,3 +71,14 @@
   width: 100%;
   justify-content: space-between;
 }
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.centered-loader {
+  text-align: center;
+}

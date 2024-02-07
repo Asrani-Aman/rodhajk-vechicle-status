@@ -12,9 +12,13 @@ import {
 } from "react-icons/fa";
 import Logo from "../../assets/LOGO.png";
 import "./Navbar.css";
+import { useNavigate } from "react-router-dom";
+
 const Navbar = () => {
   const [nav, setNav] = useState(false);
   const [logo, setLogo] = useState(false);
+  const navigate = useNavigate();
+
   const handleNav = () => {
     setNav(!nav);
     setLogo(!logo);
@@ -23,6 +27,11 @@ const Navbar = () => {
   function handleClick(myLink) {
     window.location.href = myLink;
   }
+
+  const goToHome = () => {
+    // Redirect to Rodhak website
+    window.location.href = "https://www.dndrodhak.in/";
+  };
 
   return (
     <div className="flex w-full justify-between items-center h-20 px-4 absolute z-10 text-white">
@@ -34,16 +43,22 @@ const Navbar = () => {
             alt="logoImg"
             onClick={(e) => {
               e.preventDefault();
-
               handleClick("https://dndrodhak.in/");
             }}
           ></img>
         </h1>
       </div>
-     
+
       <div className="hidden md:flex">
-        <BiSearch className="" size={20} />
-        <BsPerson size={20} />
+        <button
+          onClick={goToHome}
+          className="cursor-pointer bg-orange-500 text-white py-2 px-4 rounded-full"
+          style={{ width: "100px", height: "40px" }}
+        >
+          Home
+        </button>
+        {/* <BiSearch className="" size={20} />
+        <BsPerson size={20} /> */}
       </div>
 
       {/* Hamburger */}
@@ -64,7 +79,9 @@ const Navbar = () => {
             : "absolute left-[-100%]"
         }
       >
-        
+        <button onClick={goToHome} className="cursor-pointer">
+          Home
+        </button>
       </div>
     </div>
   );
