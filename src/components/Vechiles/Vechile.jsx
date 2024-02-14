@@ -1,8 +1,12 @@
 import React, { Component } from "react";
 import { DNA } from "react-loader-spinner";
 import VechileNav from "./VechileNav/VechileNav";
+import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import "./Vechile.css";
 import SearchBox from "../search-box/search-box";
+
+mapboxgl.accessToken =
+  "pk.eyJ1IjoibXJpZ2VzaHRoYWt1ciIsImEiOiJjbDdwdjZ2MG4wbGVmM3JzMzVtb2U1MnJ0In0.nbEGuAgv1N1c-tXDyR7d4g";
 
 class Vechile extends Component {
   constructor() {
@@ -14,6 +18,55 @@ class Vechile extends Component {
       to: "",
       loading: true, // Add loading state
     };
+    this.mapContainer = React.createRef();
+  }
+
+  componentDidUpdate() {
+    console.log("this.mapContainer.current", this, this.mapContainer.current);
+    // Check if the ref is available
+    if (this.mapContainer.current) {
+      const map = new mapboxgl.Map({
+        container: this.mapContainer.current,
+        style: "mapbox://styles/mapbox/navigation-night-v1",
+        center: [77.1666, 31.9165],
+        zoom: 8,
+      });
+
+      map.on("move", () => {
+        this.setState({
+          lng: map.getCenter().lng.toFixed(4),
+          lat: map.getCenter().lat.toFixed(4),
+          zoom: map.getZoom().toFixed(2),
+        });
+      });
+
+      map.addControl(new mapboxgl.NavigationControl());
+
+      // Dummy coordinates for demonstration in Himachal Pradesh, India
+      const dummyCoordinates = [
+        { longitude: 76.3319, latitude: 32.0842 },
+        { longitude: 77.1734, latitude: 31.9064 },
+        { longitude: 77.1736, latitude: 32.2462 },
+        { longitude: 76.9409, latitude: 32.1022 },
+        { longitude: 76.2966, latitude: 31.6478 },
+        { longitude: 76.3125, latitude: 32.2396 },
+        { longitude: 77.6041, latitude: 32.2396 },
+        { longitude: 77.8375, latitude: 32.3204 },
+        { longitude: 77.8375, latitude: 31.6844 },
+        { longitude: 76.7137, latitude: 31.8491 },
+        // Add more dummy coordinates in Himachal Pradesh, India, as needed
+      ];
+
+      // Add markers for each vehicle to the map
+      dummyCoordinates.forEach((coordinates, index) => {
+        const marker = new mapboxgl.Marker()
+          .setLngLat([coordinates.longitude, coordinates.latitude])
+          .setPopup(
+            new mapboxgl.Popup().setHTML(`<h3>Vehicle ${index + 1}</h3>`)
+          )
+          .addTo(map);
+      });
+    }
   }
 
   componentDidMount() {
@@ -45,6 +98,34 @@ class Vechile extends Component {
       return { to };
     });
   };
+
+  // renderMap() {
+  //   // Add navigation control to the map
+  //   map.addControl(new mapboxgl.NavigationControl());
+
+  //   // Dummy coordinates for demonstration in Himachal Pradesh, India
+  //   const dummyCoordinates = [
+  //     { longitude: 76.3319, latitude: 32.0842 },
+  //     { longitude: 77.1734, latitude: 31.9064 },
+  //     { longitude: 77.1736, latitude: 32.2462 },
+  //     { longitude: 76.9409, latitude: 32.1022 },
+  //     { longitude: 76.2966, latitude: 31.6478 },
+  //     { longitude: 76.3125, latitude: 32.2396 },
+  //     { longitude: 77.6041, latitude: 32.2396 },
+  //     { longitude: 77.8375, latitude: 32.3204 },
+  //     { longitude: 77.8375, latitude: 31.6844 },
+  //     { longitude: 76.7137, latitude: 31.8491 },
+  //     // Add more dummy coordinates in Himachal Pradesh, India, as needed
+  //   ];
+
+  //   // Add markers for each vehicle to the map
+  //   dummyCoordinates.forEach((coordinates, index) => {
+  //     const marker = new mapboxgl.Marker()
+  //       .setLngLat([coordinates.longitude, coordinates.latitude])
+  //       .setPopup(new mapboxgl.Popup().setHTML(`<h3>Vehicle ${index + 1}</h3>`))
+  //       .addTo(map);
+  //   });
+  // }
 
   render() {
     const { vechicles, from, to, loading } = this.state;
@@ -79,6 +160,7 @@ class Vechile extends Component {
     return (
       <div className="vechile-section">
         <VechileNav />
+
         <div className="filtering">
           <h4>Search Buses</h4>
           <div className="searchBars">
@@ -94,6 +176,9 @@ class Vechile extends Component {
             />
           </div>
         </div>
+        {/* Add a container for the map */}
+        <div ref={this.mapContainer} className="map-container" />
+
         <div className="card-list vechiles">
           {finalFilterVechicles.map((vechiclee) => {
             const id = vechiclee._id;
@@ -118,11 +203,10 @@ class Vechile extends Component {
                     }}
                   >
                     <p>From: {Start} </p>
-
                     <p> To: {End}</p>
                   </div>
                   <button style={{ backgroundColor: "#4cceac" }}>
-                    <a href={`http://89.116.33.224:3000/himraahi/trip/${id}`}>
+                    <a href={`https://himraahi.in/himraahi/trip/${id}`}>
                       Show Status Here
                     </a>
                   </button>
