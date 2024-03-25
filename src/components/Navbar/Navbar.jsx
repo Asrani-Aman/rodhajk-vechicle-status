@@ -10,7 +10,7 @@ import {
   FaPinterest,
   FaYoutube,
 } from "react-icons/fa";
-import Logo from "../../assets/LOGO.png";
+import Logo from "../../assets/rd.png";
 import "./Navbar.css";
 import { useNavigate } from "react-router-dom";
 
