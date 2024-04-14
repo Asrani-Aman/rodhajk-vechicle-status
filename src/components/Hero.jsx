@@ -23,7 +23,7 @@ const Hero = () => {
           <h1>SEARCH FOR BUSES</h1>
           <h2 className="py-4">HERE !!</h2>
           <form
-            className="flex-col justify-center items-center max-w-[300px] mx-auto w-full border p-1 rounded-md text-black bg-gray-100/90"
+            className="flex-col justify-center items-center max-w-[300px] mx-auto w-full  text-black "
             onSubmit={(e) => e.preventDefault()}
           >
             <div>

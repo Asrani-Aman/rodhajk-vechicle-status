@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "../../../assets/LOGO.png";
+import Logo from "../../../assets/rd.png";
 import "./VechileNav.css";
 
 const VechileNav = () => {
