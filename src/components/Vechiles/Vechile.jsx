@@ -95,7 +95,7 @@ const Vechile = () => {
         });
       });
     }
-  }, [loading]);
+  }, [loading, socketVechicles]);
 
   useEffect(() => {
     if (!loading && map.current && socketVechicles) {
@@ -138,7 +138,31 @@ const Vechile = () => {
       //     });
       // });
     }
-  }, [socketVechicles, loading]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socketVechicles, loading, selectedVehicle]);
+
+  useEffect(() => {
+    if (map.current && routeGeometry) {
+      // Add the route layer to the map
+      map.current.addLayer({
+        id: "route",
+        type: "line",
+        source: {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            properties: {},
+            geometry: routeGeometry,
+          },
+        },
+        paint: {
+          "line-color": "#4cceac",
+          "line-width": 4,
+        },
+      });
+    }
+  }, [routeGeometry]);
+
   const handleSearchFromChange = (event) => {
     setFrom(event.target.value.toLowerCase());
   };
@@ -204,30 +228,6 @@ const Vechile = () => {
       </div>
 
       <div ref={mapContainer} className="map-container" />
-
-      {routeGeometry && (
-        <source-map-layer
-          id="route"
-          type="line"
-          source={{
-            type: "geojson",
-            data: {
-              type: "FeatureCollection",
-              features: [
-                {
-                  type: "Feature",
-                  properties: {},
-                  geometry: routeGeometry,
-                },
-              ],
-            },
-          }}
-          paint={{
-            "line-color": "#4cceac",
-            "line-width": 4,
-          }}
-        />
-      )}
 
       <div className="card-list vechiles">
         {finalFilteredVehicles.map((vehicle) => (
