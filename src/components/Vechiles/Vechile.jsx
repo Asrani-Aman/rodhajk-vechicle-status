@@ -39,7 +39,11 @@ const Vechile = () => {
       );
 
       const data = await response2.json();
-      console.log("fetched data", data);
+      console.log(
+        "fetched data",
+        data,
+        `https://api.mapbox.com/directions/v5/mapbox/driving/${sourceLocation[0]},${sourceLocation[1]};${destinationLocation[0]},${destinationLocation[1]}?geometries=geojson&access_token=${mapboxgl.accessToken}`
+      );
       setRouteGeometry(data.routes[0].geometry);
     } catch (error) {
       console.error("Error fetching route geometry:", error);
@@ -73,6 +77,7 @@ const Vechile = () => {
 
   useEffect(() => {
     if (!loading && mapContainer.current) {
+      console.log("making map");
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: "mapbox://styles/mapbox/navigation-night-v1",
@@ -95,6 +100,7 @@ const Vechile = () => {
         });
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -138,6 +144,7 @@ const Vechile = () => {
       //     });
       // });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socketVechicles, selectedVehicle]);
 
   useEffect(() => {
