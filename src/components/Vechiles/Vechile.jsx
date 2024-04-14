@@ -95,7 +95,7 @@ const Vechile = () => {
         });
       });
     }
-  }, [loading, socketVechicles]);
+  }, []);
 
   useEffect(() => {
     if (!loading && map.current && socketVechicles) {
@@ -138,11 +138,19 @@ const Vechile = () => {
       //     });
       // });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socketVechicles, loading, selectedVehicle]);
+  }, [socketVechicles, selectedVehicle]);
 
   useEffect(() => {
     if (map.current && routeGeometry) {
+      console.log("hit req", routeGeometry);
+
+      // Check if source with ID "route" already exists
+      const existingSource = map.current.getSource("route");
+
+      // If source already exists, remove it
+      if (existingSource) {
+        map.current.removeSource("route");
+      }
       // Add the route layer to the map
       map.current.addLayer({
         id: "route",

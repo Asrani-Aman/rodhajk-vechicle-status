@@ -3,7 +3,7 @@ import "./search-box.styles.css";
 
 class SearchBox extends Component {
   render() {
-    console.log("render from SearcBox");
+    // console.log("render from SearcBox");
     // const { onChangeHandler } = this.props;
 
     return (
