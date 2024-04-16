@@ -17,6 +17,7 @@ const Vechile = () => {
   const [loading, setLoading] = useState(true);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [routeGeometry, setRouteGeometry] = useState(null);
+  const [routeNum, setRouteNum] = useState(0);
 
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -45,39 +46,16 @@ const Vechile = () => {
         `https://api.mapbox.com/directions/v5/mapbox/driving/${sourceLocation[0]},${sourceLocation[1]};${destinationLocation[0]},${destinationLocation[1]}?geometries=geojson&access_token=${mapboxgl.accessToken}`
       );
       setRouteGeometry(data.routes[0].geometry);
+      setRouteNum((prevRouteNum) => prevRouteNum + 1);
     } catch (error) {
       console.error("Error fetching route geometry:", error);
     }
   };
 
   useEffect(() => {
-    socket.current = io("http://localhost:3000/");
-
-    socket.current.on("broadcastDriverData", (data) => {
-      // console.log("Received data from backend:", data);
-      setSocketVechicles((prevVehicles) => ({
-        ...prevVehicles,
-        [data.tripID]: data,
-      }));
-    });
-
-    return () => {
-      socket.current.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    fetch("https://www.himraahi.in/himraahi/trips")
-      .then((response) => response.json())
-      .then((data) => {
-        setVechicles(data.data);
-        setLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
     if (!loading && mapContainer.current) {
-      console.log("making map");
+      console.log("making map", routeGeometry);
+
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: "mapbox://styles/mapbox/navigation-night-v1",
@@ -101,6 +79,32 @@ const Vechile = () => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    // socket.current = io("http://localhost:3000/");
+    // let SOCKET_URL = "https://himraahi.in/";
+    socket.current = io("https://himraahi.in/");
+    socket.current.on("broadcastDriverData", (data) => {
+      // console.log("Received data from backend:", data);
+      setSocketVechicles((prevVehicles) => ({
+        ...prevVehicles,
+        [data.tripID]: data,
+      }));
+    });
+
+    return () => {
+      socket.current.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    fetch("https://www.himraahi.in/himraahi/trips")
+      .then((response) => response.json())
+      .then((data) => {
+        setVechicles(data.data);
+        setLoading(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -145,11 +149,11 @@ const Vechile = () => {
       // });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socketVechicles, selectedVehicle]);
+  }, [socketVechicles, selectedVehicle, loading, mapContainer.current]);
 
   useEffect(() => {
     if (map.current && routeGeometry) {
-      console.log("hit req", routeGeometry);
+      // console.log("hit req", routeGeometry);
 
       // Check if source with ID "route" already exists
       const existingSource = map.current.getSource("route");
@@ -157,10 +161,11 @@ const Vechile = () => {
       // If source already exists, remove it
       if (existingSource) {
         map.current.removeSource("route");
+        map.current.removeLayer("route");
       }
       // Add the route layer to the map
       map.current.addLayer({
-        id: "route",
+        id: `route-${routeNum}`,
         type: "line",
         source: {
           type: "geojson",
@@ -171,7 +176,7 @@ const Vechile = () => {
           },
         },
         paint: {
-          "line-color": "#4cceac",
+          "line-color": "#FF0000",
           "line-width": 4,
         },
       });
@@ -201,30 +206,6 @@ const Vechile = () => {
   return (
     <div className="vechile-section">
       <VechileNav />
-
-      {routeGeometry && (
-        <source-map-layer
-          id="route"
-          type="line"
-          source={{
-            type: "geojson",
-            data: {
-              type: "FeatureCollection",
-              features: [
-                {
-                  type: "Feature",
-                  properties: {},
-                  geometry: routeGeometry,
-                },
-              ],
-            },
-          }}
-          paint={{
-            "line-color": "#4cceac",
-            "line-width": 4,
-          }}
-        />
-      )}
 
       <div className="filtering">
         <h4>Search Buses</h4>
