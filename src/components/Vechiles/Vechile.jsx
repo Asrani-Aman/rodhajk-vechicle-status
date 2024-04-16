@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { DNA } from "react-loader-spinner";
+import busImg from "../../assets/bus.png";
 import VechileNav from "./VechileNav/VechileNav";
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import "./Vechile.css";
@@ -34,16 +35,18 @@ const Vechile = () => {
 
       const sourceLocation = tripData.coordinateStart;
       const destinationLocation = tripData.coordinateEnd;
+      const via = tripData.via;
 
       const response2 = await fetch(
-        `https://api.mapbox.com/directions/v5/mapbox/driving/${sourceLocation[0]},${sourceLocation[1]};${destinationLocation[0]},${destinationLocation[1]}?geometries=geojson&access_token=${mapboxgl.accessToken}`
+        `https://api.mapbox.com/directions/v5/mapbox/driving/${sourceLocation[1]},${sourceLocation[0]};${via[1]},${via[0]};${destinationLocation[1]},${destinationLocation[0]}?alternatives=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
       );
 
       const data = await response2.json();
       console.log(
         "fetched data",
+        tripData,
         data,
-        `https://api.mapbox.com/directions/v5/mapbox/driving/${sourceLocation[0]},${sourceLocation[1]};${destinationLocation[0]},${destinationLocation[1]}?geometries=geojson&access_token=${mapboxgl.accessToken}`
+        `https://api.mapbox.com/directions/v5/mapbox/driving/${sourceLocation[1]},${sourceLocation[0]};${via[1]},${via[0]};${destinationLocation[1]},${destinationLocation[0]}?alternatives=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
       );
       setRouteGeometry(data.routes[0].geometry);
       setRouteNum((prevRouteNum) => prevRouteNum + 1);
@@ -51,35 +54,6 @@ const Vechile = () => {
       console.error("Error fetching route geometry:", error);
     }
   };
-
-  useEffect(() => {
-    if (!loading && mapContainer.current) {
-      console.log("making map", routeGeometry);
-
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: "mapbox://styles/mapbox/navigation-night-v1",
-        center: [77.1666, 31.9165],
-        zoom: 8,
-      });
-
-      map.current.on("load", () => {
-        // Add markers for each vehicle
-        Object.values(socketVechicles).forEach((vehicle) => {
-          const marker = new mapboxgl.Marker()
-            .setLngLat([vehicle.longitude, vehicle.latitude])
-            .setPopup(
-              new mapboxgl.Popup().setHTML(
-                `<h3>Trip ID: ${vehicle.tripID}</h3>`
-              )
-            )
-            .addTo(map.current);
-          markers.current.push(marker);
-        });
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     // socket.current = io("http://localhost:3000/");
@@ -108,7 +82,37 @@ const Vechile = () => {
   }, []);
 
   useEffect(() => {
-    if (!loading && map.current && socketVechicles) {
+    // if (map.current) return;
+    if (!loading) {
+      console.log("making map", routeGeometry, map.current);
+
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: "mapbox://styles/mapbox/streets-v9",
+        center: [77.1666, 31.9165],
+        zoom: 8,
+      });
+
+      map.current.on("load", () => {
+        // Add markers for each vehicle
+        Object.values(socketVechicles).forEach((vehicle) => {
+          const marker = new mapboxgl.Marker()
+            .setLngLat([vehicle.longitude, vehicle.latitude])
+            .setPopup(
+              new mapboxgl.Popup().setHTML(
+                `<h4>Source Location: <h3>${vehicle.sourceLocation}</h3></h4><h4><h3>Destination Location: ${vehicle.destinationLocation}</h3></h4>`
+              )
+            )
+            .addTo(map.current);
+          markers.current.push(marker);
+        });
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!loading && socketVechicles) {
       // Remove existing markers
       markers.current.forEach((marker) => marker.remove());
       markers.current = [];
@@ -116,11 +120,17 @@ const Vechile = () => {
       // Add new markers
       Object.values(socketVechicles).forEach((vehicle) => {
         setSelectedVehicle(vehicle);
+        // Create a custom HTML element for the marker
+        const markerElement = document.createElement("div");
+        markerElement.className = "custom-marker";
+        // markerElement.style.backgroundImage = `url(${vehicle.imageUrl})`;  To be done later
+
+        markerElement.style.backgroundImage = `url(${busImg})`;
         const marker = new mapboxgl.Marker()
           .setLngLat([vehicle.longitude, vehicle.latitude])
           .setPopup(
             new mapboxgl.Popup().setHTML(
-              `<h3>Trip ID: ${vehicle.tripID}</h3><button id="showRoute">Show Bus Route</button>`
+              `<h3>Source Location: ${vehicle.sourceLocation}</h3><h3>Destination Location: ${vehicle.destinationLocation}</h3>`
             )
           )
           .addTo(map.current);
@@ -152,8 +162,8 @@ const Vechile = () => {
   }, [socketVechicles, selectedVehicle, loading, mapContainer.current]);
 
   useEffect(() => {
-    if (map.current && routeGeometry) {
-      // console.log("hit req", routeGeometry);
+    if (routeGeometry) {
+      console.log("hit req", map.current, routeGeometry);
 
       // Check if source with ID "route" already exists
       const existingSource = map.current.getSource("route");
