@@ -39,23 +39,27 @@ const Vechile = () => {
       const sourceLocation = tripData.coordinateStart;
       const destinationLocation = tripData.coordinateEnd;
       const via = tripData.via;
-      if (via) {
+      if (via.length !== 0) {
         response2 = await fetch(
+          `https://api.mapbox.com/directions/v5/mapbox/driving/${sourceLocation[1]},${sourceLocation[0]};${via[1]},${via[0]};${destinationLocation[1]},${destinationLocation[0]}?alternatives=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
+        );
+        console.log(
+          "fetched data via there",
           `https://api.mapbox.com/directions/v5/mapbox/driving/${sourceLocation[1]},${sourceLocation[0]};${via[1]},${via[0]};${destinationLocation[1]},${destinationLocation[0]}?alternatives=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
         );
       } else {
         response2 = await fetch(
           `https://api.mapbox.com/directions/v5/mapbox/driving/${sourceLocation[1]},${sourceLocation[0]};${destinationLocation[1]},${destinationLocation[0]}?alternatives=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
         );
+
+        console.log(
+          "fetched data ",
+          `https://api.mapbox.com/directions/v5/mapbox/driving/${sourceLocation[1]},${sourceLocation[0]};${destinationLocation[1]},${destinationLocation[0]}?alternatives=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
+        );
       }
 
       const data = await response2.json();
-      console.log(
-        "fetched data",
-        tripData,
-        data,
-        `https://api.mapbox.com/directions/v5/mapbox/driving/${sourceLocation[1]},${sourceLocation[0]};${via[1]},${via[0]};${destinationLocation[1]},${destinationLocation[0]}?alternatives=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
-      );
+
       setRouteGeometry(data.routes[0].geometry);
       setRouteNum((prevRouteNum) => prevRouteNum + 1);
     } catch (error) {
@@ -128,9 +132,9 @@ const Vechile = () => {
   }, []);
 
   useEffect(() => {
-    if (loading && map.current && socketVechicles) {
+    if (map.current && socketVechicles) {
       console.log("setSelectedVehicle", map.current);
-      setMapLoaded(true);
+
       // Remove existing markers
       markers.current.forEach((marker) => marker.remove());
       markers.current = [];
@@ -177,7 +181,7 @@ const Vechile = () => {
       // });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socketVechicles, selectedVehicle, loading, mapContainer.current]);
+  }, [socketVechicles, selectedVehicle, mapContainer.current]);
 
   useEffect(() => {
     if (routeGeometry) {
@@ -251,7 +255,7 @@ const Vechile = () => {
         </div>
       </div>
       <div ref={mapContainer} className="map-container" />
-      {mapLoaded &
+      {!mapLoaded &
       (
         <div className="loader-container">
           <MagnifyingGlass
