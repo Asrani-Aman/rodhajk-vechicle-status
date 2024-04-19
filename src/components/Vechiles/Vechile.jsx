@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { DNA } from "react-loader-spinner";
+import { DNA, MagnifyingGlass } from "react-loader-spinner";
 import busImg from "../../assets/bus.png";
 import VechileNav from "./VechileNav/VechileNav";
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
@@ -24,9 +24,12 @@ const Vechile = () => {
   const map = useRef(null);
   const markers = useRef([]);
   const socket = useRef(null);
+  // Add a state to track whether the map is loaded
+  const [mapLoaded, setMapLoaded] = useState(false);
 
   const fetchRouteGeometry = async (sourceLongitude, sourceLatitude) => {
     const tripId = selectedVehicle.tripID;
+    let response2;
     try {
       const response = await fetch(
         `https://www.himraahi.in/himraahi/trip/Coords/${tripId}`
@@ -36,10 +39,15 @@ const Vechile = () => {
       const sourceLocation = tripData.coordinateStart;
       const destinationLocation = tripData.coordinateEnd;
       const via = tripData.via;
-
-      const response2 = await fetch(
-        `https://api.mapbox.com/directions/v5/mapbox/driving/${sourceLocation[1]},${sourceLocation[0]};${via[1]},${via[0]};${destinationLocation[1]},${destinationLocation[0]}?alternatives=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
-      );
+      if (via) {
+        response2 = await fetch(
+          `https://api.mapbox.com/directions/v5/mapbox/driving/${sourceLocation[1]},${sourceLocation[0]};${via[1]},${via[0]};${destinationLocation[1]},${destinationLocation[0]}?alternatives=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
+        );
+      } else {
+        response2 = await fetch(
+          `https://api.mapbox.com/directions/v5/mapbox/driving/${sourceLocation[1]},${sourceLocation[0]};${destinationLocation[1]},${destinationLocation[0]}?alternatives=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
+        );
+      }
 
       const data = await response2.json();
       console.log(
@@ -60,7 +68,7 @@ const Vechile = () => {
     // let SOCKET_URL = "https://himraahi.in/";
     socket.current = io("https://himraahi.in/");
     socket.current.on("broadcastDriverData", (data) => {
-      // console.log("Received data from backend:", data);
+      console.log("Received data from backend:", data);
       setSocketVechicles((prevVehicles) => ({
         ...prevVehicles,
         [data.tripID]: data,
@@ -74,16 +82,24 @@ const Vechile = () => {
 
   useEffect(() => {
     fetch("https://www.himraahi.in/himraahi/trips")
-      .then((response) => response.json())
+      .then((response) => {
+        return response.json();
+      })
       .then((data) => {
         setVechicles(data.data);
         setLoading(false);
+        console.log("making api", loading);
+      })
+      .catch((error) => {
+        console.log("Error fetching data:", error);
+        setLoading(false); // Set loading to false in case of an error
       });
   }, []);
 
   useEffect(() => {
-    // if (map.current) return;
-    if (!loading) {
+    console.log("making map", loading, mapContainer.current);
+    if (!map.current && mapContainer.current) {
+      setMapLoaded(true);
       console.log("making map", routeGeometry, map.current);
 
       map.current = new mapboxgl.Map({
@@ -112,7 +128,9 @@ const Vechile = () => {
   }, []);
 
   useEffect(() => {
-    if (!loading && socketVechicles) {
+    if (loading && map.current && socketVechicles) {
+      console.log("setSelectedVehicle", map.current);
+      setMapLoaded(true);
       // Remove existing markers
       markers.current.forEach((marker) => marker.remove());
       markers.current = [];
@@ -232,8 +250,23 @@ const Vechile = () => {
           />
         </div>
       </div>
-
       <div ref={mapContainer} className="map-container" />
+      {mapLoaded &
+      (
+        <div className="loader-container">
+          <MagnifyingGlass
+            visible={true}
+            color="#4cceac"
+            height={100}
+            width={100}
+            radius={50}
+            margin={10}
+          />
+          <div className="loading-text">
+            <p>Loading Map</p>
+          </div>
+        </div>
+      )}
 
       <div className="card-list vechiles">
         {finalFilteredVehicles.map((vehicle) => (

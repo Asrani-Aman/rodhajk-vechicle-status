@@ -78,9 +78,15 @@
 
 .loader-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 100vh;
+}
+
+/* Loading text styles */
+.loading-text p {
+  color: #fff; /* Adjust text color */
+  font-size: 20px; /* Adjust font size */
+  margin-bottom: 10px; /* Add margin */
 }
 
 .centered-loader {
